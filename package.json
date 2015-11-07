@@ -1,0 +1,31 @@
+{
+  "name": "ghost-azure-storage",
+  "version": "1.0.0",
+  "description": "Store content from ghost in azure file storage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tparnell8/ghost-azurestorage"
+  },
+  "keywords": [
+    "ghost",
+    "microsoft",
+    "azure",
+    "storage",
+    "plugin",
+    "blog"
+  ],
+  "author": "Tommy James Parnell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tparnell8/ghost-azurestorage/issues"
+  },
+  "homepage": "http://tparnell.io",
+  "dependencies": {
+    "azure-storage": "~0.6.0",
+    "when": "^3.7.4"
+  }
+}
