@@ -14,7 +14,6 @@ function azurestore(config){
 };
 
 azurestore.prototype.save = function (image) {
-    console.log('hit');
     var fileService = azure.createBlobService(options.connectionString);
     var uniqueName = new Date().getMonth() +"/" + new Date().getFullYear()+"/"+ image.name;
     return nodefn.call(fileService.createContainerIfNotExists.bind(fileService), options.container, {publicAccessLevel: 'blob'})

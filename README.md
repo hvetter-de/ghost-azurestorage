@@ -23,11 +23,15 @@ Add `storage` block to file `config.js` in each environment as below:
      storage: {
 			active: 'ghost-azurestorage',
 			'ghost-azurestorage': {
-				connectionString: 'YourConnectionStringHere'
+				connectionString: 'YourConnectionStringHere',
+        container: 'YourOptionalContainerName'
 			}
 		},
 
 ```
 
+## Environment Variables
+
+You can set your connection string as the Environment Variable `AZURE_STORAGE_CONNECTION_STRING`
 
 Released under the [MIT license](https://github.com/muzix/ghost-s3/blob/master/LICENSE).
