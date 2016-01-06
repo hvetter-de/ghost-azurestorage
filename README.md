@@ -24,7 +24,9 @@ Add `storage` block to file `config.js` in each environment as below:
 			active: 'ghost-azurestorage',
 			'ghost-azurestorage': {
 				connectionString: 'YourConnectionStringHere',
-        container: 'YourOptionalContainerName'
+				container: 'YourOptionalContainerName',
+				cdnUrl: "YourCDNEndpointDomain",
+				useHttps : "UseHttpsInEndpoint" //Optional: CDN protocol. Defaults to http if omitted. Set to "true", to enable.
 			}
 		},
 
