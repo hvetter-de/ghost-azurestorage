@@ -23,13 +23,14 @@ azurestore.prototype.save = function (image) {
     .delay(500) //todo: this was placed here per issue #4 (aka sometimes things 404 right after upload) figure out a better way than just adding a delay
     .then(function () {
         var urlValue = fileService.getUrl(options.container, uniqueName);
-        
-        if(!options.cdnUrl)
-            return urlValue;
-        
+
+        if(!options.cdnUrl){
+            return urlValue;    
+        }
+
         var parsedUrl = url.parse(urlValue, true, true);
         var protocol = (options.useHttps ? "https" : "http") + "://";
-        
+
         return protocol + options.cdnUrl  + parsedUrl.path;
     });
 };
