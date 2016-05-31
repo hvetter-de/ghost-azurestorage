@@ -16,12 +16,6 @@ This module allows you to store media file at Azure instead of storing at local 
 * `mkdir content/storage` (make the storage folder if it doesn't exist yet)
 * `cp -Recurse node_modules/ghost-azurestorage content/storage/ghost-azurestorage` (copy the module into the right location)
 
-## Create storage module
-
-Create index.js file with folder path 'content/storage/ghost-azurestorage/index.js' (manually create folder if not exist)
-
-    'use strict';
-    module.exports = require('ghost-azure-storage');
 
 ## Configuration
 
