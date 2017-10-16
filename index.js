@@ -30,7 +30,7 @@ class AzureStorageAdapter extends BaseStorage{
   save(image) {
     var fileService = azure.createBlobService(options.connectionString);
     let date = new Date();
-    var uniqueName = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + image.name;
+    var uniqueName = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + date.getHours() + date.getMinutes() + "_" + image.name;
 
     return new Promise(function(resolve, reject) {
       fileService.createContainerIfNotExists(options.container, { publicAccessLevel: 'blob' },function (error) {
