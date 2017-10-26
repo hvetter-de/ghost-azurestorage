@@ -1,47 +1,91 @@
-﻿'use strict';
-var azure = require('azure-storage'),
-    fs = require('fs'),
-    path = require('path'),
-    when = require('when'),
-    nodefn = require('when/node'),
-    url = require('url'),
-    options = {};
+'use strict';
 
+const BaseStorage = require("ghost-storage-base");
+const fs = require("fs");
+const Promise = require("bluebird");
+const request = require("request");
+const azure = require('azure-storage');
+const url = require('url');
 
-function azurestore(config) {
+var options = {};
+
+class AzureStorageAdapter extends BaseStorage{
+  constructor(config) {
+    super();
+
     options = config || {};
     options.connectionString = options.connectionString || process.env.AZURE_STORAGE_CONNECTION_STRING;
     options.container = options.container || 'ghost';
     options.useHttps = options.useHttps == 'true';
-};
+  }
+  
+  exists(filename) {
+    console.log(filename);
+    
+    return request(filename)
+        .then(res => res.statusCode === 200)
+        .catch(() => false);
+  }
 
-azurestore.prototype.save = function (image) {
+  save(image) {
     var fileService = azure.createBlobService(options.connectionString);
-    var uniqueName = new Date().getMonth() + "/" + new Date().getFullYear() + "/" + image.name;
-    return nodefn.call(fileService.createContainerIfNotExists.bind(fileService), options.container, { publicAccessLevel: 'blob' })
-    .then(nodefn.call(fileService.createBlockBlobFromLocalFile.bind(fileService), options.container, uniqueName, image.path))
-    .delay(500) //todo: this was placed here per issue #4 (aka sometimes things 404 right after upload) figure out a better way than just adding a delay
-    .then(function () {
-        var urlValue = fileService.getUrl(options.container, uniqueName);
+    let date = new Date();
+    var uniqueName = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + date.getHours() + date.getMinutes() + "_" + image.name;
 
-        if(!options.cdnUrl){
-            return urlValue;    
-        }
-
-        var parsedUrl = url.parse(urlValue, true, true);
-        var protocol = (options.useHttps ? "https" : "http") + "://";
-
-        return protocol + options.cdnUrl  + parsedUrl.path;
+    return new Promise(function(resolve, reject) {
+      fileService.createContainerIfNotExists(options.container, { publicAccessLevel: 'blob' },function (error) {
+        if (error) 
+          console.log(error);
+         else
+         {
+          console.log('Created the container or already existed. Container:' + options.container);
+          fileService.createBlockBlobFromLocalFile(options.container, uniqueName, image.path, function (error) {
+            if (error)
+            {
+              console.log(error);
+              reject(error.message);
+            }
+              else
+              {
+                var urlValue = fileService.getUrl(options.container, uniqueName);
+          
+                  if(!options.cdnUrl){
+                      resolve(urlValue);
+                  }
+          
+                  var parsedUrl = url.parse(urlValue, true, true);
+                  var protocol = (options.useHttps ? "https" : "http") + "://";
+          
+                  resolve(protocol + options.cdnUrl  + parsedUrl.path);
+              }
+          });
+         }
+        });
     });
-};
+  }
 
-azurestore.prototype.serve = function () {
-    return function (req, res, next) {
-        next();
-    };
-};
+  serve() {
+    return function customServe(req, res, next) {
+      next();
+    }
+  }
 
+  delete() {
+    
+  }
 
+  read(options) {
+    return new Promise(function (resolve, reject) {
+      request.get(options.path, function (err, res) 
+      {
+       if (err)
+        return reject(new Error("Cannot download image" + options.path));
+       else 
+         resolve(res.body);
+     });
+  });
+  }
 
+}
 
-module.exports = azurestore;
+module.exports = AzureStorageAdapter;

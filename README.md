@@ -26,16 +26,15 @@ Create new azure storage account, and get the connection string (can be found in
 
 Add `storage` block to file `config.js` in each environment as below:
 ```
-     storage: {
-			active: 'ghost-azurestorage',
-			'ghost-azurestorage': {
-				connectionString: 'YourConnectionStringHere',
-				container: 'YourOptionalContainerName',
-				cdnUrl: "YourCDNEndpointDomain",
-				useHttps : "UseHttpsInEndpoint" //Optional: CDN protocol. Defaults to http if omitted. Set to "true", to enable.
+     "storage": {
+			"active": "ghost-azurestorage",
+			"ghost-azurestorage": {
+				"connectionString": "YourConnectionStringHere",
+				"container": "YourOptionalContainerName",
+				"cdnUrl": "YourCDNEndpointDomain",
+				"useHttps" : "true" //Optional: CDN protocol. Defaults to http if omitted. Set to "true", to enable.
 			}
 		},
-
 ```
 
 ## Environment Variables

@@ -25,8 +25,7 @@
   },
   "homepage": "http://tparnell.io",
   "dependencies": {
-    "azure-storage": "~0.6.0",
-    "when": "^3.7.4",
+    "azure-storage": "~2.6.0",
     "url": "^0.11.0"
   }
 }
