@@ -1,7 +1,3 @@
-# Looking for maintainers.
-
-Hi, I don't use ghost anymore. If you are interested in taking this over [see this issue](https://github.com/TerribleDev/ghost-azurestorage/issues/11)
- 
 # Ghost Azure
 
 This module allows you to store media file at Azure instead of storing at local machine.
