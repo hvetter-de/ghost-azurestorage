@@ -9,7 +9,7 @@ const url = require('url');
 
 var options = {};
 
-class AzureStorageAdapter extends BaseStorage{
+class AzureStorageAdapter extends BaseStorage {
   constructor(config) {
     super();
 
@@ -18,13 +18,13 @@ class AzureStorageAdapter extends BaseStorage{
     options.container = options.container || 'ghost';
     options.useHttps = options.useHttps == 'true';
   }
-  
+
   exists(filename) {
     console.log(filename);
-    
+
     return request(filename)
-        .then(res => res.statusCode === 200)
-        .catch(() => false);
+      .then(res => res.statusCode === 200)
+      .catch(() => false);
   }
 
   save(image) {
@@ -32,35 +32,32 @@ class AzureStorageAdapter extends BaseStorage{
     let date = new Date();
     var uniqueName = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + date.getHours() + date.getMinutes() + "_" + image.name;
 
-    return new Promise(function(resolve, reject) {
-      fileService.createContainerIfNotExists(options.container, { publicAccessLevel: 'blob' },function (error) {
-        if (error) 
+    return new Promise(function (resolve, reject) {
+      fileService.createContainerIfNotExists(options.container, { publicAccessLevel: 'blob' }, function (error) {
+        if (error)
           console.log(error);
-         else
-         {
+        else {
           console.log('Created the container or already existed. Container:' + options.container);
           fileService.createBlockBlobFromLocalFile(options.container, uniqueName, image.path, function (error) {
-            if (error)
-            {
+            if (error) {
               console.log(error);
               reject(error.message);
             }
-              else
-              {
-                var urlValue = fileService.getUrl(options.container, uniqueName);
-          
-                  if(!options.cdnUrl){
-                      resolve(urlValue);
-                  }
-          
-                  var parsedUrl = url.parse(urlValue, true, true);
-                  var protocol = (options.useHttps ? "https" : "http") + "://";
-          
-                  resolve(protocol + options.cdnUrl  + parsedUrl.path);
+            else {
+              var urlValue = fileService.getUrl(options.container, uniqueName);
+
+              if (!options.cdnUrl) {
+                resolve(urlValue);
               }
+
+              var parsedUrl = url.parse(urlValue, true, true);
+              var protocol = (options.useHttps ? "https" : "http") + "://";
+
+              resolve(protocol + options.cdnUrl + parsedUrl.path);
+            }
           });
-         }
-        });
+        }
+      });
     });
   }
 
@@ -71,19 +68,26 @@ class AzureStorageAdapter extends BaseStorage{
   }
 
   delete() {
-    
+  
   }
 
   read(options) {
     return new Promise(function (resolve, reject) {
-      request.get(options.path, function (err, res) 
-      {
-       if (err)
-        return reject(new Error("Cannot download image" + options.path));
-       else 
-         resolve(res.body);
-     });
-  });
+
+      var requestSettings = {
+        method: 'GET',
+        url: options.path,
+        encoding: null
+      };
+
+      request(requestSettings, function (error, response, body) {
+        // Use body as a binary Buffer
+        if (error)
+          return reject(new Error("Cannot download image" + options.path));
+        else
+          resolve(body);
+      });
+    })
   }
 
 }
