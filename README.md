@@ -8,12 +8,12 @@ This module allows you to store media file at Azure instead of storing at local 
 
 * `npm install ghost-azure-storage` (note the absence of `--save`)
 * `mkdir content/storage` (make the storage folder if it doesn't exist yet)
-* `cp -vR node_modules/ghost-azure-storage content/storage/ghost-azure-storage` (copy the module into the right location)
+* `cp -vR node_modules/ghost-azure-storage content/adapters/storage/ghost-azure-storage` (copy the module into the right location)
 
 #### powershell
 * `npm install ghost-azure-storage` (note the absence of `--save`)
 * `mkdir content/storage` (make the storage folder if it doesn't exist yet)
-* `cp -Recurse node_modules/ghost-azure-storage content/storage/ghost-azure-storage` (copy the module into the right location)
+* `cp -Recurse node_modules/ghost-azure-storage content/adapters/storage/ghost-azure-storage` (copy the module into the right location)
 
 
 ## Configuration
