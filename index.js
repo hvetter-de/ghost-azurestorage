@@ -1,7 +1,6 @@
 'use strict';
 
 const BaseStorage = require("ghost-storage-base");
-const fs = require("fs");
 const Promise = require("bluebird");
 const request = require("request");
 const azure = require('azure-storage');
@@ -15,7 +14,7 @@ class AzureStorageAdapter extends BaseStorage {
 
     options = config || {};
     options.connectionString = options.connectionString || process.env.AZURE_STORAGE_CONNECTION_STRING;
-    options.container = options.container || 'ghost';
+    options.container = options.container || 'content';
     options.useHttps = options.useHttps == 'true';
   }
 
@@ -29,8 +28,7 @@ class AzureStorageAdapter extends BaseStorage {
 
   save(image) {
     var fileService = azure.createBlobService(options.connectionString);
-    let date = new Date();
-    var uniqueName = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + date.getHours() + date.getMinutes() + "_" + image.name;
+    var uniqueName = "images" + "/" + image.name;
 
     return new Promise(function (resolve, reject) {
       fileService.createContainerIfNotExists(options.container, { publicAccessLevel: 'blob' }, function (error) {
@@ -54,6 +52,7 @@ class AzureStorageAdapter extends BaseStorage {
               var protocol = (options.useHttps ? "https" : "http") + "://";
 
               resolve(protocol + options.cdnUrl + parsedUrl.path);
+              // resolve(parsedUrl.path);
             }
           });
         }
