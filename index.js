@@ -36,7 +36,14 @@ class AzureStorageAdapter extends BaseStorage {
           console.log(error);
         else {
           console.log('Created the container or already existed. Container:' + options.container);
-          fileService.createBlockBlobFromLocalFile(options.container, uniqueName, image.path, function (error) {
+            fileService.createBlockBlobFromLocalFile(options.container, uniqueName, image.path,     { 
+                  contentSettings: { 
+                    // TODO:add in contentType
+                    // contentType: 'image/png', 
+                    cacheControl: 'public, max-age=2592000' 
+                  } 
+                }, 
+            function (error) {
             if (error) {
               console.log(error);
               reject(error.message);
