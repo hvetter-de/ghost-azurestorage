@@ -49,14 +49,14 @@ Run the following commands in the directory where Ghost is installed:
 Add `storage` block to file `config.js` in each environment as below:
 ```
     "storage": {
-	  "active": "ghost-storage-azure",
-	  "ghost-storage-azure": {
-		"connectionString": "YourConnectionStringHere",
-		"container": "YourOptionalContainerName",
-		"cdnUrl": "YourCDNEndpointDomain",
-		"useHttps" : "true" //Optional: CDN protocol. Defaults to http if omitted. Set to "true", to enable.
-	  }
-	},
+      "active": "ghost-storage-azure",
+      "ghost-storage-azure": {
+	"connectionString": "YourConnectionStringHere",
+	"container": "YourOptionalContainerName",
+	"cdnUrl": "YourCDNEndpointDomain",
+	"useHttps" : "true" //Optional: CDN protocol. Defaults to http if omitted. Set to "true", to enable.
+       }
+    },
 ```
 
 ## Environment Variables
