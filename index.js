@@ -82,7 +82,7 @@ class AzureStorageAdapter extends BaseStorage {
       request(requestSettings, function (error, response, body) {
         // Use body as a binary Buffer
         if (error)
-          return reject(new Error("Cannot download image" + options.path));
+          return reject(new Error("Cannot download image" + " " + options.path));
         else
           resolve(body);
       });

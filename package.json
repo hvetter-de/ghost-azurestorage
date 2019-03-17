@@ -1,6 +1,6 @@
 {
   "name": "ghost-storage-azure",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Store content from ghost in azure file storage",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tparnell8/ghost-azurestorage"
+    "url": "https://github.com/jldeen/ghost-azurestorage"
   },
   "keywords": [
     "ghost",
