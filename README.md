@@ -8,11 +8,20 @@ This module is heavily based on the original [Ghost Azure Storage Adapter](https
 This updated module will upload your images to the specified blob storage with the file format `<container-name>/images/image-name.jpg` and does __not__ use the `date` format `<year>/month/date-hours-min_image-name.jpg`. 
 The adapter's upload process will automatically set CacheControl to 30 days, or more specifically: `public, max-age=2592000`.
 
-- TODO: Make file format configurable via parameter. (Need to add support for optional enabling of date format)
-- TODO: Update CacheControl to optional parameter
-- TODO: Add in contentType based on image extension
-- TODO: Add in support for Azure Files
-- TODO: Update adapter methods to support Ghost's added support of [custom image sizes upon request](https://github.com/TryGhost/Ghost/pull/10184).
+### Features
+
+- Ghost version `2.x` (not tested on previous Ghost versions)
+- Latest Azure Storage Client Library [SDK](https://github.com/Azure/azure-storage-node)
+- Image upload
+- Ability to upload in dated sub-directories (similar to Ghost default Local storage adapter `YYYY/MM/dd-hh-mm_image-name.jpg`)
+- Ability to upload images into a directory `<container-name>/images`
+
+### TO-DO Tasks
+
+- Update CacheControl to optional parameter with configurable settings
+- Add in contentType based on image extension (Azure Storage defaults to application/octet-stream)
+- Add in support for Azure Files (currently only works with blob storage)
+- Update adapter methods to support Ghost's added support of [custom image sizes upon request](https://github.com/TryGhost/Ghost/pull/10184).
 
 ## Installation
 
@@ -57,7 +66,8 @@ Add `storage` block to file `config.js` in each environment as below:
 	"connectionString": "YourConnectionStringHere",
 	"container": "YourOptionalContainerName",
 	"cdnUrl": "YourCDNEndpointDomain",
-	"useHttps" : "true" //Optional: CDN protocol. Defaults to http if omitted. Set to "true", to enable.
+	"useHttps" : "true", //Optional: CDN protocol. Defaults to http if omitted. Set to "true", to enable.
+	"useDatedFolder" : true //Optional: Defaults to false. Set to `true` to enable.
        }
     },
 ```
