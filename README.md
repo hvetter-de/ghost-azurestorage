@@ -2,7 +2,7 @@
 
 This module is heavily based on the original [Ghost Azure Storage Adapter](https://github.com/Niyo/ghost-azurestorage) by [Niyo](https://github.com/Niyo), which allows you to store media files using Azure Storage and Azure Content Delivery Network resources instead of storing images on your local machine or local storage.
 
-This updated module will upload your images to the specified blob storage with the file format `<container-name>/images/image-name.jpg` and does __not__ use the `date` format `<year>/month/date-hours-min_/image-name.jpg`. 
+This updated module will upload your images to the specified blob storage with the file format `<container-name>/images/image-name.jpg` and does __not__ use the `date` format `<year>/month/date-hours-min_image-name.jpg`. 
 The adapter's upload process will automatically set CacheControl to 30 days, or more specifically: `public, max-age=2592000`.
 
 - TODO: Make file format configurable via parameter. (Need to add support for optional enabling of date format)
