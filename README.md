@@ -30,8 +30,7 @@ Run the following commands in the directory where Ghost is installed:
 #### *nix
 
 * `npm install ghost-storage-azure` (note the absence of `--save`)
-* `mkdir content/adapters` (make the adapters folder if it doesn't already exist yet)
-* `mkdir content/storage/adapters` (make the storage folder if it doesn't already exist)
+* `mkdir -p content/adapters/storage` (make the adapters and storage folders if they do not already exist yet)
 * `cp -vR node_modules/ghost-storage-azure content/adapters/storage/ghost-storage-azure` (copy the module into the right location, the name must match)
 
 #### powershell
