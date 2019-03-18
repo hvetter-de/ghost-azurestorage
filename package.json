@@ -1,6 +1,6 @@
 {
   "name": "ghost-storage-azure",
-  "version": "1.0.4",
+  "version": "1.0.3-rc.1",
   "description": "Store content from ghost in azure file storage",
   "main": "index.js",
   "scripts": {
