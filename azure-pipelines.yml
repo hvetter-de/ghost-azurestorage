@@ -16,5 +16,5 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    npm install
+    npm install --loglevel=error
   displayName: 'npm install'
