@@ -16,6 +16,7 @@ class AzureStorageAdapter extends BaseStorage {
     options.connectionString = options.connectionString || process.env.AZURE_STORAGE_CONNECTION_STRING;
     options.container = options.container || 'content';
     options.useHttps = options.useHttps == 'true';
+    options.useDatedFolder = options.useDatedFolder || false;
   }
 
   exists(filename) {
@@ -28,7 +29,15 @@ class AzureStorageAdapter extends BaseStorage {
 
   save(image) {
     var fileService = azure.createBlobService(options.connectionString);
-    var uniqueName = "images" + "/" + image.name;
+
+    // Appends the dated folder if enabled
+    if (options.useDatedFolder) {
+      let date = new Date();
+      var uniqueName = "images" + "/" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + date.getHours() + date.getMinutes() + "_" + image.name;
+    }
+    else {
+      var uniqueName = "images" + "/" + image.name;
+    }
 
     return new Promise(function (resolve, reject) {
       fileService.createContainerIfNotExists(options.container, { publicAccessLevel: 'blob' }, function (error) {
