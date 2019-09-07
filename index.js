@@ -89,7 +89,7 @@ class AzureStorageAdapter extends BaseStorage {
           const tmpFileResize = `${tmpResizeName}-w${size.x}${image.ext}`;
 
           if (options.useDatedFolder) {
-            var blobNameResize = "images/size/" + sizes.x + "/" + date.useDate() + imageName + image.ext;
+            var blobNameResize = "images/size/" + size.x + "/" + date.useDate() + imageName + image.ext;
           } 
           else {
             var blobNameResize = "images/size/" + size.x + "/" + imageName + image.ext;
