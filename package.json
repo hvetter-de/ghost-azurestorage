@@ -1,10 +1,10 @@
 {
   "name": "ghost-storage-azure",
-  "version": "1.0.3-rc.1",
+  "version": "1.0.4-rc",
   "description": "Store content from ghost in azure file storage",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No test specified\" && exit 0"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,10 @@
   "dependencies": {
     "azure-storage": "^2.10.2",
     "bluebird": "^3.5.1",
+    "fs": "0.0.1-security",
     "ghost-storage-base": "^0.0.3",
+    "request": "^2.88.0",
+    "sharp": "^0.23.0",
     "url": "^0.11.0"
   }
 }

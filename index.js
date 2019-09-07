@@ -1,21 +1,26 @@
-'use strict';
+"use strict";
 
 const BaseStorage = require("ghost-storage-base");
 const Promise = require("bluebird");
 const request = require("request");
-const azure = require('azure-storage');
-const url = require('url');
+const url = require("url");
+const date = require("./lib/getDate")
+const sizes = require("./lib/sizes");
+const resize = require("./lib/resize");
+const FileService = require("./lib/fileService");
 
 var options = {};
 
+//AzureStorageAdapter config
 class AzureStorageAdapter extends BaseStorage {
   constructor(config) {
     super();
 
     options = config || {};
-    options.connectionString = options.connectionString || process.env.AZURE_STORAGE_CONNECTION_STRING;
-    options.container = options.container || 'content';
-    options.useHttps = options.useHttps == 'true';
+    options.connectionString =
+    options.connectionString || process.env.AZURE_STORAGE_CONNECTION_STRING;
+    options.container = options.container || "content";
+    options.useHttps = options.useHttps == "true";
     options.useDatedFolder = options.useDatedFolder || false;
   }
 
@@ -28,83 +33,101 @@ class AzureStorageAdapter extends BaseStorage {
   }
 
   save(image) {
-    var fileService = azure.createBlobService(options.connectionString);
+    //create azure storage blob connection
+    var fileService = new FileService(options, image);
+
+    // set image config
+    let config = {
+      contentSettings: {
+        contentType: image.type,
+        cacheControl: "public, max-age=2592000"
+      }
+    };
+
+    // remove original ext & set .webp format extension
+    const imageName = image.name.replace(/\.[^/.]+$/, "");
 
     // Appends the dated folder if enabled
-    if (options.useDatedFolder) {
-      let date = new Date();
-      var uniqueName = "images" + "/" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + date.getHours() + date.getMinutes() + "_" + image.name;
-    }
+    if (options.useDatedFolder) {   
+      var blobName ="images/" + date.useDate() + image.name;
+    } 
     else {
-      var uniqueName = "images" + "/" + image.name;
+      var blobName = "images/" + image.name;
     }
+    
+    if (image.path.indexOf('_processed') < 0) {
+      console.log("Image upload detected")
+    } else {
+      return new Promise(async (resolve, reject) => {
+        // resize images
+        await resize(image.path, image.ext);
 
-    return new Promise(function (resolve, reject) {
-      fileService.createContainerIfNotExists(options.container, { publicAccessLevel: 'blob' }, function (error) {
-        if (error)
-          console.log(error);
+        // make sure the container exists
+        await fileService.createContainer(options.container);
+
+        // upload original image
+        await fileService.createBlob(options.container, blobName, image.path, config);
+        
+        // resolve/return url for/to Ghost
+        const urlValue = fileService.getBlob(blobName);
+        if (!options.cdnUrl) {
+          console.log("CDN not specified, urlValue is: " + urlValue);
+          resolve(urlValue);
+        }
         else {
-          console.log('Created the container or already existed. Container:' + options.container);
-            fileService.createBlockBlobFromLocalFile(options.container, uniqueName, image.path,     { 
-                  contentSettings: { 
-                    // TODO:add in contentType
-                    // contentType: 'image/png', 
-                    cacheControl: 'public, max-age=2592000' 
-                  } 
-                }, 
-            function (error) {
-            if (error) {
-              console.log(error);
-              reject(error.message);
-            }
-            else {
-              var urlValue = fileService.getUrl(options.container, uniqueName);
+          var parsedUrl = url.parse(urlValue, true, true);
+          var protocol = (options.useHttps ? "https" : "http") + "://";
+          var cdnUrl = protocol + options.cdnUrl + parsedUrl.path;
+          console.log("CDN is specified, urlValue is: " + cdnUrl);
+          resolve(cdnUrl);
+        }
 
-              if (!options.cdnUrl) {
-                resolve(urlValue);
-              }
+        // set vars for resize upload
+        for (let size of sizes) {
+          const tmpResizeName = image.path.replace(/\.[^/.]+$/, "");
 
-              var parsedUrl = url.parse(urlValue, true, true);
-              var protocol = (options.useHttps ? "https" : "http") + "://";
+          const tmpFileResize = `${tmpResizeName}-w${size.x}${image.ext}`;
 
-              resolve(protocol + options.cdnUrl + parsedUrl.path);
-              // resolve(parsedUrl.path);
-            }
-          });
+          if (options.useDatedFolder) {
+            var blobNameResize = "images/size/" + sizes.x + "/" + date.useDate() + imageName + image.ext;
+          } 
+          else {
+            var blobNameResize = "images/size/" + size.x + "/" + imageName + image.ext;
+          }
+
+          //upload resized images
+          await fileService.createBlob(options.container, blobNameResize, tmpFileResize, config);
         }
       });
-    });
+    }
   }
 
   serve() {
     return function customServe(req, res, next) {
       next();
-    }
+    };
   }
 
-  delete() {
-  
-  }
+  delete() {}
 
   read(options) {
-    return new Promise(function (resolve, reject) {
-
+    return new Promise(function(resolve, reject) {
       var requestSettings = {
-        method: 'GET',
+        method: "GET",
         url: options.path,
         encoding: null
       };
 
-      request(requestSettings, function (error, response, body) {
+      request(requestSettings, function(error, response, body) {
         // Use body as a binary Buffer
         if (error)
-          return reject(new Error("Cannot download image" + " " + options.path));
-        else
-          resolve(body);
+          return reject(
+            new Error("Cannot download image" + " " + options.path)
+          );
+        else resolve(body);
       });
-    })
+    });
   }
-
 }
 
 module.exports = AzureStorageAdapter;
