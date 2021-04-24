@@ -25,9 +25,9 @@
   },
   "homepage": "http://tparnell.io",
   "dependencies": {
-    "azure-storage": "~2.6.0",
-    "url": "^0.11.0",
+    "azure-storage": "^2.10.3",
     "bluebird": "^3.5.1",
-    "ghost-storage-base": "^0.0.3"
+    "ghost-storage-base": "^0.0.3",
+    "url": "^0.11.0"
   }
 }
