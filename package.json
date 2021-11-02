@@ -1,6 +1,6 @@
 {
   "name": "ghost-azure-storage",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Store content from ghost in azure file storage",
   "main": "index.js",
   "scripts": {
@@ -18,12 +18,12 @@
     "plugin",
     "blog"
   ],
-  "author": "Tommy James Parnell",
+  "author": "Tommy James Parnell, Holger Vetter",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tparnell8/ghost-azurestorage/issues"
   },
-  "homepage": "http://tparnell.io",
+  "homepage": "",
   "dependencies": {
     "azure-storage": "^2.10.3",
     "bluebird": "^3.5.1",
