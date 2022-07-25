@@ -4,7 +4,7 @@ This module allows you to store media file at Azure instead of storing at local 
 
 ## Installation
 
-You need to enter the following commands in the directory in which ghost is installed. For example, if you followed the [Ghost setup guide](https://docs.ghost.org/docs/install), it'll be in `/var/www/ghost`.
+You need to enter the following commands in the directory in which ghost is installed. For example, if you followed the [Ghost setup guide](https://ghost.org/docs/install/), it'll be in `/var/www/ghost`.
 
 #### *nix
 
